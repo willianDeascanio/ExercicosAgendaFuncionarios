@@ -46,6 +46,7 @@
             this.buttonEditar = new System.Windows.Forms.Button();
             this.buttonSalvar = new System.Windows.Forms.Button();
             this.buttonNovo = new System.Windows.Forms.Button();
+            this.agendaTableAdapter = new WindowsFormsApp.agendaparcialDataSetTableAdapters.AgendaTableAdapter();
             this.SuspendLayout();
             // 
             // labelNome
@@ -128,7 +129,6 @@
             this.listViewAgenda.UseCompatibleStateImageBehavior = false;
             this.listViewAgenda.View = System.Windows.Forms.View.Details;
             this.listViewAgenda.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvAgenda_ColumnClick);
-            this.listViewAgenda.SelectedIndexChanged += new System.EventHandler(this.lvAgenda_SelectedIndexChanged);
             // 
             // Nome
             // 
@@ -210,11 +210,15 @@
             this.buttonNovo.UseVisualStyleBackColor = true;
             this.buttonNovo.Click += new System.EventHandler(this.btnNovo_Click);
             // 
+            // agendaTableAdapter
+            // 
+            this.agendaTableAdapter.ClearBeforeFill = true;
+            // 
             // CadastroAgenda
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(787, 377);
+            this.ClientSize = new System.Drawing.Size(787, 390);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.buttonExcluir);
             this.Controls.Add(this.buttonEditar);
@@ -258,5 +262,6 @@
         private System.Windows.Forms.Button buttonEditar;
         private System.Windows.Forms.Button buttonExcluir;
         private System.Windows.Forms.Button button1;
+        private agendaparcialDataSetTableAdapters.AgendaTableAdapter agendaTableAdapter;
     }
 }

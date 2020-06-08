@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WindowsFormsApp.agendaparcialDataSetTableAdapters;
 
 namespace WindowsFormsApp
 {
@@ -77,6 +78,17 @@ namespace WindowsFormsApp
 
                 MessageBox.Show($"Usuário adicionado {tbNome.Text}", "Atenção");
 
+                // manipulação do banco de dados
+                // insert:
+
+                try
+                {
+                    agendaTableAdapter.Insert(tbNome.Text, tbEndereco.Text, tbTelefone.Text, tbEmail.Text);
+                }
+                catch (System.Exception ex)
+                {
+                    MessageBox.Show("Erro ao salvar registro na tabela Agenda.",Convert.ToString(ex));
+                }
             }
 
         }
@@ -94,6 +106,7 @@ namespace WindowsFormsApp
                 listaAgenda.Excluir(nome);
             }
 
+            
         }
 
         private void btnNovo_Click(object sender, EventArgs e)
@@ -118,6 +131,8 @@ namespace WindowsFormsApp
                
 
                 listaAgenda.Editar(tbNome.Text, tbEndereco.Text, tbTelefone.Text, tbEmail.Text,indice);
+
+
             }
 
         }
@@ -141,7 +156,24 @@ namespace WindowsFormsApp
         {
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            LimparCampos();
+            
+
+            //manipulação de banco de dados
+            // select
+
+            agendaparcialDataSet.AgendaDataTable agendaRows;
+            agendaRows = agendaTableAdapter.GetData(); // select no banco de dados.
+
+            for (int contador = 0; contador < agendaRows.Count; contador++)
+            {
+                ListViewItem item = new ListViewItem(new[] { Convert.ToString(agendaRows.Rows[contador].ItemArray[0]),
+                                                             Convert.ToString(agendaRows.Rows[contador].ItemArray[1]),
+                                                             Convert.ToString(agendaRows.Rows[contador].ItemArray[2]),
+                                                             Convert.ToString(agendaRows.Rows[contador].ItemArray[3]),
+                                                             });
+                // adicionando o objeto item na listview
+                listViewAgenda.Items.Add(item);
+            }
         }
 
 
@@ -169,6 +201,7 @@ namespace WindowsFormsApp
         {
 
         }
+
     }
 
 }
