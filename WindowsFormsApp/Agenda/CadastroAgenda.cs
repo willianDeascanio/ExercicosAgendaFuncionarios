@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WindowsFormsApp.ManipulaAgenda;
 using WindowsFormsApp.agendaparcialDataSetTableAdapters;
 
 namespace WindowsFormsApp
@@ -78,18 +79,11 @@ namespace WindowsFormsApp
 
                 MessageBox.Show($"Usuário adicionado {tbNome.Text}", "Atenção");
 
-                // manipulação do banco de dados
-                // insert:
+                ManipulaAgenda.Manipulacao.InserirRegistro(tbNome.Text, tbEndereco.Text, tbTelefone.Text, tbEmail.Text);
 
-                try
-                {
-                    agendaTableAdapter.Insert(tbNome.Text, tbEndereco.Text, tbTelefone.Text, tbEmail.Text);
-                }
-                catch (System.Exception ex)
-                {
-                    MessageBox.Show("Erro ao salvar registro na tabela Agenda.",Convert.ToString(ex));
-                }
             }
+
+
 
         }
 
@@ -104,9 +98,11 @@ namespace WindowsFormsApp
 
                 string nome = lista.SubItems[0].Text;
                 listaAgenda.Excluir(nome);
+
+                ManipulaAgenda.Manipulacao.ExcluirRegistro(nome);
             }
 
-            
+
         }
 
         private void btnNovo_Click(object sender, EventArgs e)
@@ -120,19 +116,22 @@ namespace WindowsFormsApp
             {
                 int indice;
 
+
                 var lvi = listViewAgenda.SelectedItems[0];
+                string nomeOriginal = lvi.SubItems[0].Text;
+
                 lvi.SubItems[0].Text = tbNome.Text;
                 lvi.SubItems[1].Text = tbEndereco.Text;
                 lvi.SubItems[2].Text = tbTelefone.Text;
                 lvi.SubItems[3].Text = tbEmail.Text;
 
-               
+
                 indice = listViewAgenda.Items.IndexOf(listViewAgenda.SelectedItems[0]);
-               
-
-                listaAgenda.Editar(tbNome.Text, tbEndereco.Text, tbTelefone.Text, tbEmail.Text,indice);
 
 
+                listaAgenda.Editar(tbNome.Text, tbEndereco.Text, tbTelefone.Text, tbEmail.Text, indice);
+
+                ManipulaAgenda.Manipulacao.AtualizarRegistro(tbNome.Text, tbEndereco.Text, tbTelefone.Text, tbEmail.Text,nomeOriginal);
             }
 
         }
@@ -154,25 +153,23 @@ namespace WindowsFormsApp
 
         private void CadastroAgenda_Load(object sender, EventArgs e)
         {
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            
+           
+            List<Pessoa> pessoasRegistros = ManipulaAgenda.Manipulacao.SelecionarRegistro();
 
-            //manipulação de banco de dados
-            // select
-
-            agendaparcialDataSet.AgendaDataTable agendaRows;
-            agendaRows = agendaTableAdapter.GetData(); // select no banco de dados.
-
-            for (int contador = 0; contador < agendaRows.Count; contador++)
+            for(int i = 0; i < pessoasRegistros.Count; i++)
             {
-                ListViewItem item = new ListViewItem(new[] { Convert.ToString(agendaRows.Rows[contador].ItemArray[0]),
-                                                             Convert.ToString(agendaRows.Rows[contador].ItemArray[1]),
-                                                             Convert.ToString(agendaRows.Rows[contador].ItemArray[2]),
-                                                             Convert.ToString(agendaRows.Rows[contador].ItemArray[3]),
-                                                             });
-                // adicionando o objeto item na listview
+                ListViewItem item = new ListViewItem(new[] { pessoasRegistros[i].nome,
+                                                             pessoasRegistros[i].endereco,
+                                                             pessoasRegistros[i].telefone,
+                                                             pessoasRegistros[i].email
+
+
+                });
+
                 listViewAgenda.Items.Add(item);
+
+                listaAgenda.Salvar(pessoasRegistros[i].nome,pessoasRegistros[i].endereco, pessoasRegistros[i].telefone, pessoasRegistros[i].email);
+
             }
         }
 

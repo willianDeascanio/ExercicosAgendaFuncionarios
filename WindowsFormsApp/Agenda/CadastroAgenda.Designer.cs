@@ -237,6 +237,7 @@
             this.MinimizeBox = false;
             this.Name = "CadastroAgenda";
             this.Text = "Agenda";
+            this.Load += new System.EventHandler(this.CadastroAgenda_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
